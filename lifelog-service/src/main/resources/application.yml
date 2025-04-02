@@ -18,11 +18,15 @@ spring:
       enabled: true                          # H2 ?? ???
       path: /h2-console                      # H2 ?? ??
 
-  rabbitmq:
+  rabbitmq: # Docker Desktop ??
     host: localhost # raiibtMQ Host
     port: 5672
     username: guest
     password: guest
+    listener:
+      simple:
+        concurrency: 2
+        max-concurrency: 5
 
 eureka:
   client:
