@@ -28,7 +28,10 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.30/f195ee86e6c896ea47a1d39defbe20eb59cd149d/lombok-1.18.30.jar" />
         </processorPath>
+        <module name="code-interview-platform.eureka-server.main" />
+        <module name="code-interview-platform.api-gateway.main" />
         <module name="code-interview-platform.common.main" />
+        <module name="code-interview-platform.worker-server.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17">

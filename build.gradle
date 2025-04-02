@@ -30,10 +30,13 @@ subprojects {
 
     dependencies {
 
-        implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework.boot:spring-boot-starter'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+        // lombok
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
     }
 
     dependencyManagement {
@@ -59,9 +62,6 @@ queryDslModules.each { proj ->
         // JPA
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-        // lombok
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
 
         // QueryDSL
         implementation 'com.blazebit:blaze-persistence-integration-querydsl-expressions-jakarta:1.6.11'

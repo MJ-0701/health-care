@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-800023387/code-interview-platform.api-gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-800023387/code-interview-platform.api-gateway.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-510535081/code-interview-platform.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-510535081/code-interview-platform.common.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1197514283/code-interview-platform.eureka-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/1197514283/code-interview-platform.eureka-server.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/code-interview-platform.lifelog-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/code-interview-platform.lifelog-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/-840414689/code-interview-platform.user-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-840414689/code-interview-platform.user-service.main.iml" />
     </modules>

@@ -1,5 +1,6 @@
 dependencies {
 
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server' // Eureka Server 의존성
     implementation 'org.springframework.boot:spring-boot-starter-actuator' // 헬스 체크
 }

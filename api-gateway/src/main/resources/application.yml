@@ -37,4 +37,3 @@ eureka:
 
 
 jwt:
-  secret: my-super-secret-key-which-is-32-characters!

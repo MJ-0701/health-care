@@ -7,8 +7,8 @@ create table lifelog (
     log_type varchar(50) not null, -- BLOOD_PRESSURE 등
     payload jsonb not null, -- 원본 JSON 전체 저장
     status varchar(20) default 'NORMAL', -- 정상, 경고, 위험 상태값
-    start_time timestamptz not null, -- 활동 시작 시간
-    created_at timestamptz not null default now(),
-    updated_at timestamptz not null default now()
+    start_time TIMESTAMP not null, -- 활동 시작 시간
+    created_at TIMESTAMP not null default now(),
+    updated_at TIMESTAMP not null default now()
 
 );
