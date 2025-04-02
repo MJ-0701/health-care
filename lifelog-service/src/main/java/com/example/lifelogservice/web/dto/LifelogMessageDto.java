@@ -10,7 +10,9 @@ import java.util.Map;
 @Builder
 public class LifelogMessageDto {
 
+    private String userId;
     private String ci;
     private String logType;
     private Map<String, Object> payload;
+
 }

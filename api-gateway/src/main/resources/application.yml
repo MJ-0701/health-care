@@ -15,16 +15,16 @@ spring:
         - id: user-service-route
           uri: lb://user-service
           predicates:
-            - Path=/user/**
+            - Path=/v1/users/**
           filters:
-            - RewritePath=/user/(?<segment>.*), /$\{segment} # 프리픽스 제거 설정 : user-service/list -> /list
+            - RewritePath=/v1/users/(?<segment>.*), /$\{segment}
 
         - id: lifelog-service-route
           uri: lb://lifelog-service
           predicates:
-            - Path=/lifelog/**
+            - Path=/v1/lifelog/**
           filters:
-            - RewritePath=/lifelog/(?<segment>.*), /$\{segment}
+            - RewritePath=/v1/lifelog/(?<segment>.*), /$\{segment}
 
 
   main:
