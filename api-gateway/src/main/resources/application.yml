@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: user-service-route
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**
+          filters:
+            - RewritePath=/user/(?<segment>.*), /$\{segment} # 프리픽스 제거 설정 : user-service/list -> /list
+
+        - id: lifelog-service-route
+          uri: lb://lifelog-service
+          predicates:
+            - Path=/lifelog/**
+          filters:
+            - RewritePath=/lifelog/(?<segment>.*), /$\{segment}
+
+
+  main:
+    web-application-type: reactive
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Eureka ?? URL
+
+
+jwt:
+  secret: my-super-secret-key-which-is-32-characters!

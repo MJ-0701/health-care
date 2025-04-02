@@ -1,0 +1,13 @@
+dependencies {
+	// Eureka Client
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator' // 헬스 체크
+
+	implementation project(':common')
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+tasks.register("prepareKotlinBuildScriptModel"){}

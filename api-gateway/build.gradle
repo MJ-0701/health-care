@@ -1,0 +1,46 @@
+dependencies {
+
+	// Spring Cloud Gateway
+	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+
+	// Spring WebFlux
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// Jackson (자바 프로젝트용)
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	// 필요시 다른 Jackson 모듈 추가 가능 (예: jackson-module-parameter-names)
+
+	// Spring Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// Eureka Client
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	// Spring Boot Actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	// Resilience4j (서킷 브레이커 등)
+	implementation 'io.github.resilience4j:resilience4j-spring-boot3'
+
+	// OAuth2 Client
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	// JWT 관련 라이브러리
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	// Spring Boot Starter Web
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// 테스트 의존성
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+//dependencyManagement {
+//	imports {
+//		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.0"
+//	}
+//}
+
+tasks.register("prepareKotlinBuildScriptModel"){}

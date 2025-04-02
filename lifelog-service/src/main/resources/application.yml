@@ -1,0 +1,42 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: lifelog-service
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL       # H2 ??????? MySql ?? ??? ??
+    driver-class-name: org.h2.Driver         # H2 JDBC ????
+    username: lifelog                        # ?? ????
+    password: lifelog                        # ?? ???? (??)
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect  # Hibernate H2 Dialect ??
+    hibernate:
+      ddl-auto: update                       # ??? ?? ?? (??: none, validate, update, create, create-drop) ??? ?? -> update
+  h2:
+    console:
+      enabled: true                          # H2 ?? ???
+      path: /h2-console                      # H2 ?? ??
+
+  rabbitmq:
+    host: localhost # raiibtMQ Host
+    port: 5672
+    username: guest
+    password: guest
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Eureka URL
+    fetch-registry: true
+    register-with-eureka: true
+
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
