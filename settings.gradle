@@ -1,3 +1,3 @@
 rootProject.name = 'code-interview-platform'
 
-include 'eureka-server', 'api-gateway', 'user-service','lifelog-service','worker-server','common'
+include 'eureka-server', 'api-gateway', 'user-service','lifelog-service','worker-server','common', 'storage-module'

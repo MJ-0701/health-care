@@ -1,14 +1,14 @@
 package com.example.userservice.messaging;
 
-import com.example.userservice.web.dto.LifelogMessageDto;
+import com.example.storagemodule.dto.LifelogMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class LifelogProducerService {
 
     private final RabbitTemplate rabbitTemplate;

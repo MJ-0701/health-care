@@ -6,6 +6,17 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.30/f195ee86e6c896ea47a1d39defbe20eb59cd149d/lombok-1.18.30.jar" />
+        </processorPath>
+        <module name="code-interview-platform.eureka-server.main" />
+        <module name="code-interview-platform.api-gateway.main" />
+        <module name="code-interview-platform.common.main" />
+        <module name="code-interview-platform.storage-module.main" />
+        <module name="code-interview-platform.worker-server.main" />
+      </profile>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.30/f195ee86e6c896ea47a1d39defbe20eb59cd149d/lombok-1.18.30.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/3.2.2/cdf33f985035494cb3ea6f9e5d6589ba9fb58e91/spring-boot-configuration-processor-3.2.2.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.querydsl/querydsl-jpa/5.0.0/2a653852848dee41b967d3520be3339f0f92f1ea/querydsl-jpa-5.0.0-jakarta.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.querydsl/querydsl-apt/5.0.0/d48657412f2b96d787bbe5ae393e33815c94b4d0/querydsl-apt-5.0.0-jakarta.jar" />
@@ -22,16 +33,6 @@
         </processorPath>
         <module name="code-interview-platform.lifelog-service.main" />
         <module name="code-interview-platform.user-service.main" />
-      </profile>
-      <profile name="Gradle Imported" enabled="true">
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.30/f195ee86e6c896ea47a1d39defbe20eb59cd149d/lombok-1.18.30.jar" />
-        </processorPath>
-        <module name="code-interview-platform.eureka-server.main" />
-        <module name="code-interview-platform.api-gateway.main" />
-        <module name="code-interview-platform.common.main" />
-        <module name="code-interview-platform.worker-server.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17">

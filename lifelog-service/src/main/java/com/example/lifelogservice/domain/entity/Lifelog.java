@@ -3,6 +3,7 @@ package com.example.lifelogservice.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -40,5 +41,5 @@ public class Lifelog extends BaseTimeEntity {
     private String status = "NORMAL";
 
     @Column(name = "start_time", nullable = false)
-    private ZonedDateTime startTime;
+    private LocalDateTime startTime;
 }

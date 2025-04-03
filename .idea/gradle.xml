@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/eureka-server" />
             <option value="$PROJECT_DIR$/lifelog-service" />
+            <option value="$PROJECT_DIR$/storage-module" />
             <option value="$PROJECT_DIR$/user-service" />
             <option value="$PROJECT_DIR$/worker-server" />
           </set>

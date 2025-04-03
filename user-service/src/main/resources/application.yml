@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: user-service
+  jackson:
+    time-zone: Asia/Seoul
   datasource:
     url: jdbc:h2:mem:testdb;MODE=MySQL       # H2 ??????? MySql ?? ??? ??
     driver-class-name: org.h2.Driver         # H2 JDBC ????
@@ -13,9 +15,13 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect  # Hibernate H2 Dialect ??
     hibernate:
       ddl-auto: update                       # ??? ?? ?? (??: none, validate, update, create, create-drop) ??? ?? -> update
+      jdbc:
+        time_zone: Asia/Seoul
   h2:
     console:
       enabled: true                          # H2 ?? ???
+      settings:
+        web-allow-others: true
       path: /h2-console                      # H2 ?? ??
 
   rabbitmq: # Docker Desktop ??
