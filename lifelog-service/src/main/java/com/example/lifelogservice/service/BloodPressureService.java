@@ -1,21 +1,28 @@
 package com.example.lifelogservice.service;
 
+import com.example.common.utils.CryptoUtil;
+import com.example.common.utils.TimelineRangeCalculator;
 import com.example.lifelogservice.domain.entity.Lifelog;
 import com.example.lifelogservice.domain.entity.LogType;
 import com.example.lifelogservice.domain.repository.LifelogRepository;
 import com.example.storagemodule.dto.request.LifelogMessageDto;
 import com.example.storagemodule.dto.response.BloodPressureResponseDto;
+import com.example.storagemodule.dto.response.BloodPressureTimelineDto;
+import com.example.storagemodule.dto.response.BloodPressureTimelineResponseDto;
 import com.example.storagemodule.dto.response.LifelogResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -127,4 +134,160 @@ public class BloodPressureService {
                     .build();
         }).collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public BloodPressureTimelineResponseDto getUserBloodPressureTimeline(String ci, String periodType) {
+        // 1. 조회 기간 계산 (Helper 클래스 이용 또는 직접 계산)
+        LocalDate startDate;
+        LocalDate endDate;
+        if ("7d".equalsIgnoreCase(periodType)) {
+            LocalDate maxDate = lifelogRepository.findMaxDateByCiAndLogType(ci, LogType.BLOOD_PRESSURE);
+            endDate = (maxDate == null ? LocalDate.now() : maxDate);
+            startDate = endDate.minusDays(6);
+        } else if ("1m".equalsIgnoreCase(periodType)) {
+            endDate = LocalDate.now();
+            startDate = endDate.minusMonths(1).plusDays(1);
+        } else if ("12m".equalsIgnoreCase(periodType)) {
+            endDate = LocalDate.now();
+            startDate = endDate.minusMonths(11);
+        } else {
+            endDate = LocalDate.now();
+            startDate = endDate.minusDays(6);
+        }
+
+        // 2. 원시 로그 데이터 조회
+        List<LifelogResponseDto> rawLogs = lifelogRepository.getUserBloodPressureRaw(ci, startDate, endDate);
+
+        // 3. 각 로그를 BloodPressureLogDto로 변환
+        List<BloodPressureTimelineResponseDto.BloodPressureLogDto> logDetails = rawLogs.stream()
+                .map(dto -> {
+                    Integer systolic = extractIntegerFromPayload(dto.getPayload(), "systolic");
+                    Integer diastolic = extractIntegerFromPayload(dto.getPayload(), "diastolic");
+                    return BloodPressureTimelineResponseDto.BloodPressureLogDto.builder()
+                            .systolic(systolic)
+                            .diastolic(diastolic)
+                            .startTime(dto.getStartTime())
+                            .build();
+                })
+                .toList();
+
+        // 4. 날짜별로 그룹핑 (날짜는 로그의 startTime의 날짜)
+        Map<LocalDate, List<BloodPressureTimelineResponseDto.BloodPressureLogDto>> grouped = logDetails.stream()
+                .collect(Collectors.groupingBy(log -> log.getStartTime().toLocalDate()));
+
+        // 5. 각 날짜별 Daily DTO 생성 (로그 리스트와 집계값 포함)
+        List<BloodPressureTimelineResponseDto.DailyBloodPressureDetailDto> dailyDetails = grouped.entrySet().stream()
+                .map(entry -> {
+                    LocalDate date = entry.getKey();
+                    // 로그 리스트 정렬
+                    List<BloodPressureTimelineResponseDto.BloodPressureLogDto> sortedLogs = entry.getValue().stream()
+                            .sorted(Comparator.comparing(BloodPressureTimelineResponseDto.BloodPressureLogDto::getStartTime))
+                            .collect(Collectors.toList());
+
+                    // 최소/최대 값 계산 (헬퍼 메서드 사용)
+                    Integer dailyMinSystolic = getMinValue(sortedLogs.stream()
+                            .map(BloodPressureTimelineResponseDto.BloodPressureLogDto::getSystolic)
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList()));
+                    Integer dailyMaxSystolic = getMaxValue(sortedLogs.stream()
+                            .map(BloodPressureTimelineResponseDto.BloodPressureLogDto::getSystolic)
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList()));
+                    Integer dailyMinDiastolic = getMinValue(sortedLogs.stream()
+                            .map(BloodPressureTimelineResponseDto.BloodPressureLogDto::getDiastolic)
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList()));
+                    Integer dailyMaxDiastolic = getMaxValue(sortedLogs.stream()
+                            .map(BloodPressureTimelineResponseDto.BloodPressureLogDto::getDiastolic)
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList()));
+
+                    return BloodPressureTimelineResponseDto.DailyBloodPressureDetailDto.builder()
+                            .date(date)
+                            .logs(sortedLogs)
+                            .minSystolic(dailyMinSystolic)
+                            .maxSystolic(dailyMaxSystolic)
+                            .minDiastolic(dailyMinDiastolic)
+                            .maxDiastolic(dailyMaxDiastolic)
+                            .build();
+                })
+                .sorted(Comparator.comparing(BloodPressureTimelineResponseDto.DailyBloodPressureDetailDto::getDate))
+                .collect(Collectors.toList());
+
+        // 6. 전체 기간의 날짜 리스트 (x축)
+        List<LocalDate> dates = dailyDetails.stream()
+                .map(BloodPressureTimelineResponseDto.DailyBloodPressureDetailDto::getDate)
+                .sorted()
+                .collect(Collectors.toList());
+
+        // 7. 전체 로그에서 최소/최대 혈압 계산
+        Integer overallMinSystolic = getMinValue(logDetails.stream()
+                .map(BloodPressureTimelineResponseDto.BloodPressureLogDto::getSystolic)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList()));
+        Integer overallMaxSystolic = getMaxValue(logDetails.stream()
+                .map(BloodPressureTimelineResponseDto.BloodPressureLogDto::getSystolic)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList()));
+        Integer overallMinDiastolic = getMinValue(logDetails.stream()
+                .map(BloodPressureTimelineResponseDto.BloodPressureLogDto::getDiastolic)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList()));
+        Integer overallMaxDiastolic = getMaxValue(logDetails.stream()
+                .map(BloodPressureTimelineResponseDto.BloodPressureLogDto::getDiastolic)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList()));
+
+        // 8. 최종 응답 DTO 생성
+        return BloodPressureTimelineResponseDto.builder()
+                .dates(dates)
+                .overallMinSystolic(overallMinSystolic)
+                .overallMaxSystolic(overallMaxSystolic)
+                .overallMinDiastolic(overallMinDiastolic)
+                .overallMaxDiastolic(overallMaxDiastolic)
+                .dailyStats(dailyDetails)
+                .build();
+    }
+
+    // 헬퍼 메서드: 리스트에서 최소값을 반환
+    private Integer getMinValue(List<Integer> values) {
+        return values.stream().min(Integer::compareTo).orElse(null);
+    }
+
+    // 헬퍼 메서드: 리스트에서 최대값을 반환
+    private Integer getMaxValue(List<Integer> values) {
+        return values.stream().max(Integer::compareTo).orElse(null);
+    }
+
+    private Integer extractIntegerFromPayload(Object payload, String key) {
+        if (payload instanceof Map<?, ?>) {
+            Object value = ((Map<?, ?>) payload).get(key);
+            if (value instanceof String) {
+                String stringValue = (String) value;
+                // Base64 인코딩 여부 판단: 영문 대소문자, 숫자, '+', '/', '='로만 구성되어 있다면
+                if (stringValue.matches("^[A-Za-z0-9+/=]+$")) {
+                    try {
+                        String decrypted = CryptoUtil.decrypt(stringValue);
+                        double d = Double.parseDouble(decrypted);
+                        return (int) Math.round(d);
+                    } catch (Exception e) {
+                        log.error("복호화 또는 정수 변환 실패 (key: {}): {}", key, stringValue, e);
+                        return null;
+                    }
+                } else {
+                    try {
+                        double d = Double.parseDouble(stringValue);
+                        return (int) Math.round(d);
+                    } catch (Exception e) {
+                        log.error("정수 변환 실패 (key: {}): {}", key, stringValue, e);
+                        return null;
+                    }
+                }
+            } else if (value instanceof Number) {
+                return ((Number) value).intValue();
+            }
+        }
+        return null;
+    }
+
 }

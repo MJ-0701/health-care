@@ -3,11 +3,15 @@ package com.example.lifelogservice.messaging;
 import com.example.lifelogservice.config.RabbitMQConfig;
 import com.example.lifelogservice.service.BloodPressureService;
 import com.example.storagemodule.dto.request.LifelogMessageDto;
+import com.example.storagemodule.dto.request.TimelineQueryDto;
 import com.example.storagemodule.dto.response.BloodPressureResponseDto;
+import com.example.storagemodule.dto.response.BloodPressureTimelineDto;
+import com.example.storagemodule.dto.response.BloodPressureTimelineResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
@@ -44,5 +48,12 @@ public class LifelogMessageConsumer {
         List<BloodPressureResponseDto> logs = bloodPressureService.getUserBloodPressure(ci);
         log.info("조회 결과: {} 건", logs.size());
         return logs;
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.QUEUE_BP_TIMELINE_QUERY)
+    public BloodPressureTimelineResponseDto consumeBloodPressureTimelineQuery(@Payload TimelineQueryDto queryDto) {
+        log.info("🔔 혈압 타임라인 조회 메시지 수신됨: {}", queryDto);
+        BloodPressureTimelineResponseDto timeline = bloodPressureService.getUserBloodPressureTimeline(queryDto.getCi(), queryDto.getPeriodType());
+        return timeline;
     }
 }

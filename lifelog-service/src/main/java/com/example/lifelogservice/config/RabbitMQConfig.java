@@ -23,12 +23,14 @@ public class RabbitMQConfig {
     // 라우팅 키 정의 (저장용과 조회용 분리)
     public static final String ROUTING_KEY_BP_SAVE = "lifelog.bloodpressure.save";
     public static final String ROUTING_KEY_BP_QUERY = "lifelog.bloodpressure.query";
+    public static final String ROUTING_KEY_BP_TIMELINE_QUERY = "lifelog.bloodpressure.timeline.query";
     public static final String ROUTING_KEY_STEP = "lifelog.stepcount";
     public static final String ROUTING_KEY_WEIGHT = "lifelog.weight";
 
     // 큐 이름 정의
     public static final String QUEUE_BP_SAVE = "lifelog.bloodpressure.save.queue";
     public static final String QUEUE_BP_QUERY = "lifelog.bloodpressure.query.queue";
+    public static final String QUEUE_BP_TIMELINE_QUERY = "lifelog.bloodpressure.timeline.query.queue";
     public static final String QUEUE_STEP = "lifelog.stepcount.queue";
     public static final String QUEUE_WEIGHT = "lifelog.weight.queue";
 
@@ -70,6 +72,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue bloodPressureTimelineQueryQueue() {
+        return new Queue(QUEUE_BP_TIMELINE_QUERY);
+    }
+
+    @Bean
     public Queue stepCountQueue() {
         return new Queue(QUEUE_STEP);
     }
@@ -87,6 +94,13 @@ public class RabbitMQConfig {
     @Bean
     public Binding bloodPressureQueryBinding() {
         return BindingBuilder.bind(bloodPressureQueryQueue()).to(lifelogExchange()).with(ROUTING_KEY_BP_QUERY);
+    }
+
+    @Bean
+    public Binding bloodPressureTimelineQueryBinding() {
+        return BindingBuilder.bind(bloodPressureTimelineQueryQueue())
+                .to(lifelogExchange())
+                .with(ROUTING_KEY_BP_TIMELINE_QUERY);
     }
 
     @Bean

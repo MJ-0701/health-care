@@ -4,16 +4,18 @@ import java.util.Map;
 
 public class LifelogRoutingKeyMapper {
 
-    // 저장용, 조회용 라우팅 키를 별도로 정의합니다.
+    // 저장용 키
     private static final Map<String, String> SAVE_ROUTING_KEY_MAP = Map.of(
             "BLOOD_PRESSURE", "lifelog.bloodpressure.save",
-            "STEP_COUNT", "lifelog.stepcount",  // 필요에 따라 분리 가능
-            "WEIGHT", "lifelog.weight"           // 필요에 따라 분리 가능
+            "STEP_COUNT", "lifelog.stepcount",
+            "WEIGHT", "lifelog.weight"
     );
 
+    // 조회용 키
     private static final Map<String, String> QUERY_ROUTING_KEY_MAP = Map.of(
             "BLOOD_PRESSURE", "lifelog.bloodpressure.query",
-            "STEP_COUNT", "lifelog.stepcount",  // 예시로 조회와 저장이 동일한 키일 수도 있음
+            "BLOOD_PRESSURE_TIMELINE", "lifelog.bloodpressure.timeline.query",
+            "STEP_COUNT", "lifelog.stepcount",
             "WEIGHT", "lifelog.weight"
     );
 
