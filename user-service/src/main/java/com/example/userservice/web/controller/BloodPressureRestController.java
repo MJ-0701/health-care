@@ -21,7 +21,7 @@ public class BloodPressureRestController {
             @PathVariable String userId,
             @RequestBody @Valid BloodPressureRequestDto requestDto
     ) {
-        bloodPressureService.save(userId, requestDto); // payload는 평문 상태
+        bloodPressureService.save(userId, requestDto);
         return ResponseEntity.ok(ResponseObject.of(null));
     }
 
