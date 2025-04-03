@@ -10,7 +10,6 @@
         <module name="code-interview-platform.eureka-server.main" />
         <module name="code-interview-platform.api-gateway.main" />
         <module name="code-interview-platform.common.main" />
-        <module name="code-interview-platform.storage-module.main" />
         <module name="code-interview-platform.worker-server.main" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
@@ -33,6 +32,7 @@
         </processorPath>
         <module name="code-interview-platform.lifelog-service.main" />
         <module name="code-interview-platform.user-service.main" />
+        <module name="code-interview-platform.storage-module.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17">

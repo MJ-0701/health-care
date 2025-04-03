@@ -2,7 +2,7 @@ package com.example.userservice.service;
 
 import com.example.userservice.messaging.LifelogProducerService;
 import com.example.userservice.security.PayloadEncryptor;
-import com.example.userservice.web.dto.BloodPressureRequestDto;
+import com.example.userservice.web.dto.request.BloodPressureRequestDto;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;

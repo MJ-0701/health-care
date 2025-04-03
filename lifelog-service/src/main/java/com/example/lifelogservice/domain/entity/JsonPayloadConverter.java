@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class JsonPayloadConverter implements AttributeConverter<Object, String> 
     @Override
     public String convertToDatabaseColumn(Object attribute) {
         try {
-            return mapper.writeValueAsString(attribute); // 저장 시 암호화된 값 그대로 저장
+            return mapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("JSON 직렬화 실패", e);
         }
@@ -27,16 +28,31 @@ public class JsonPayloadConverter implements AttributeConverter<Object, String> 
 
     @Override
     public Object convertToEntityAttribute(String dbData) {
+        if (dbData == null || dbData.isEmpty()) {
+            return null;
+        }
+        String json = dbData.trim();
+        if (!json.startsWith("{")) {
+            if (json.startsWith("\"") && json.endsWith("\"")) {
+                json = json.substring(1, json.length() - 1);
+                json = StringEscapeUtils.unescapeJson(json);
+            }
+        }
         try {
-            Map<String, Object> map = mapper.readValue(dbData, Map.class);
+            Map<String, Object> map = mapper.readValue(json, Map.class);
             for (String key : SENSITIVE_KEYS) {
                 if (map.containsKey(key)) {
-                    String enc = map.get(key).toString();
+                    Object value = map.get(key);
+                    if (value instanceof Number) {
+                        continue;
+                    }
+                    String strValue = value.toString();
                     try {
-                        map.put(key, CryptoUtil.decrypt(enc));
+                        String decrypted = CryptoUtil.decrypt(strValue);
+                        map.put(key, decrypted);
                     } catch (Exception e) {
-                        // 복호화 실패 시 원본 유지
-                        map.put(key, enc);
+                        // 복호화 실패 시 원본을 그대로 저장
+                        map.put(key, strValue);
                     }
                 }
             }
@@ -46,5 +62,3 @@ public class JsonPayloadConverter implements AttributeConverter<Object, String> 
         }
     }
 }
-
-

@@ -7,3 +7,6 @@ INSERT INTO users (user_id, user_name, email, birth_date, gender, ci, last_login
 
 INSERT INTO users (user_id, user_name, email, birth_date, gender, ci, last_login_at, created_at, updated_at) VALUES
     ('UID20250403C3D4E5F60718293A4B5C6D7E8F9A1B2C', 'Alex Kim', 'user3@example.com', '1992-09-30', 'M', 'ci_user3', '2025-04-03 10:10:00', '2025-04-03 10:10:00', '2025-04-03 10:10:00');
+
+INSERT INTO users (user_id, user_name, email, birth_date, gender, ci, last_login_at, created_at, updated_at) VALUES
+    ('UID20250403C3D4E5F60718293A4B5C6D7E8F9A1B2D', 'Susan Chae', 'user4@example.com', '1991-07-30', 'F', 'ci_test', '2025-04-03 10:10:00', '2025-04-03 10:10:00', '2025-04-03 10:10:00');

@@ -27,7 +27,7 @@ public class Users extends BaseTimeEntity {
     private LocalDate birthDate;
 
     @Column(name = "gender", length = 1)
-    private String gender; // M / F 등 (enum으로 만들고 싶으면 말해줘!)
+    private String gender; // M / F 등
 
     @Column(name = "ci", length = 255)
     private String ci; // 본인인증 후 업데이트

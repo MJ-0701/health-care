@@ -51,6 +51,7 @@ subprojects {
 def queryDslModules = [
         project(':user-service'),
         project(':lifelog-service'),
+        project(':storage-module'),
 
 ]
 

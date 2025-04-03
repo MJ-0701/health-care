@@ -1,15 +1,24 @@
 package com.example.userservice.service;
 
-import com.example.storagemodule.dto.LifelogMessageDto;
+import com.example.storagemodule.dto.request.LifelogMessageDto;
+import com.example.storagemodule.dto.response.BloodPressureResponseDto;
+import com.example.userservice.domain.entity.UserId;
+import com.example.userservice.domain.entity.Users;
+import com.example.userservice.domain.repository.UsersRepository;
 import com.example.userservice.messaging.LifelogProducerService;
 import com.example.userservice.security.PayloadEncryptor;
-import com.example.userservice.web.dto.BloodPressureRequestDto;
+import com.example.userservice.web.dto.request.BloodPressureRequestDto;
+import com.example.userservice.web.dto.response.UserBloodPressureResponseDto;
+import com.example.userservice.web.dto.response.UserInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +27,7 @@ public class BloodPressureService {
 
     private final LifelogProducerService lifelogProducerService;
     private final PayloadEncryptor payloadEncryptor;
+    private final UsersRepository usersRepository;
 
     public void save(String userId, BloodPressureRequestDto dto) {
         // 상태 계산 (plain text 기준)
@@ -35,7 +45,7 @@ public class BloodPressureService {
         // 메시지 생성: 상태는 plain text로 포함 (암호화되지 않음)
         LifelogMessageDto message = LifelogMessageDto.builder()
                 .userId(userId)
-                .ci("TODO :: CI값 처리")
+                .ci("ci_test")
                 .logType("BLOOD_PRESSURE")
                 .payload(encryptedPayload)
                 .status(status)
@@ -44,6 +54,47 @@ public class BloodPressureService {
         // 메시지 전송
         lifelogProducerService.sendLifelogMessage(message);
         log.info("BloodPressureService.save 처리 완료 - userId: {}", userId);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<UserBloodPressureResponseDto> getUserBloodPressure(String userId) {
+        Users user = usersRepository.findById_UserId(userId);
+
+        UserInfoResponseDto userDto = UserInfoResponseDto.builder()
+                .userName(user.getUserName())
+                .gender(user.getGender())
+                .ci(user.getCi())
+                .build();
+
+        // lifelog-service에서 ci를 기반으로 혈압 로그 데이터 조회 (RabbitMQ 동기 응답)
+        List<BloodPressureResponseDto> bloodPressureLog = getBloodPressureLog(userDto.getCi());
+
+        return bloodPressureLog.stream()
+                .map(bp -> UserBloodPressureResponseDto.builder()
+                        .userName(userDto.getUserName())
+                        .gender(userDto.getGender())
+                        .logType(bp.getLogType())
+                        .isActive(bp.getIsActive())
+                        .systolic(bp.getSystolic())
+                        .diastolic(bp.getDiastolic())
+                        .startTime(bp.getStartTime())
+                        .createdAt(bp.getCreatedAt())
+                        .updatedAt(bp.getUpdatedAt())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+
+    private List<BloodPressureResponseDto> getBloodPressureLog(String ci) {
+        Object response = lifelogProducerService.getUserBloodPressureLog(ci, "BLOOD_PRESSURE");
+        if (response instanceof List<?>) {
+            return ((List<?>) response).stream()
+                    .filter(BloodPressureResponseDto.class::isInstance)
+                    .map(BloodPressureResponseDto.class::cast)
+                    .collect(Collectors.toList());
+        }
+        throw new IllegalStateException("예상하지 못한 응답 타입: " + response.getClass());
     }
 
     /**

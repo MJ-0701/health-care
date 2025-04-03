@@ -1,4 +1,4 @@
-package com.example.lifelogservice.config;
+package com.example.lifelogservice.domain.repository.support;
 
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.PathBuilderFactory;

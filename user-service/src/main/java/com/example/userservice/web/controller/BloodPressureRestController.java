@@ -2,13 +2,14 @@ package com.example.userservice.web.controller;
 
 import com.example.common.http.ResponseObject;
 import com.example.userservice.service.BloodPressureService;
-import com.example.userservice.web.dto.BloodPressureRequestDto;
+import com.example.userservice.web.dto.request.BloodPressureRequestDto;
+import com.example.userservice.web.dto.response.UserBloodPressureResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,10 +28,10 @@ public class BloodPressureRestController {
 
 
     @GetMapping("/{userId}/blood-pressure")
-    public ResponseEntity<ResponseObject<String>> getBloodPressure(
+    public ResponseEntity<ResponseObject<List<UserBloodPressureResponseDto>>> getBloodPressure(
             @PathVariable String userId
     ) {
-        return ResponseEntity.ok().body(ResponseObject.of("유저의 혈압 로그"));
+        return ResponseEntity.ok().body(ResponseObject.of(bloodPressureService.getUserBloodPressure(userId)));
     }
 
 

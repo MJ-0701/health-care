@@ -1,4 +1,4 @@
-package com.example.storagemodule.dto;
+package com.example.storagemodule.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

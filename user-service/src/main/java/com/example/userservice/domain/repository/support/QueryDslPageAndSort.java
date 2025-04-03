@@ -1,4 +1,4 @@
-package com.example.userservice.config;
+package com.example.userservice.domain.repository.support;
 
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.PathBuilderFactory;

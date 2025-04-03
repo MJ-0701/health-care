@@ -1,4 +1,4 @@
-package com.example.userservice.web.dto;
+package com.example.userservice.web.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class BloodPressureRequestDto {
+
 
     @NotNull(message = "startTime은 필수입니다.")
     private String startTime;
