@@ -244,5 +244,8 @@ docker-compose up --build
       }
       ```
 
-<img src="images/스크린샷 2025-04-04 오후 5.54.34.png" alt="유저의 혈당 로그 API 조회결과 화면" width="239" />
-<img src="images/스크린샷 2025-04-04 오후 5.55.33.png" alt="유저의 혈당 로그 API 조회결과 화면" width="239" />
+<img src="images/스크린샷 2025-04-04 오후 5.54.34.png" alt="유저의 혈압 로그 API 조회결과 화면" width="550" />
+<img src="images/스크린샷 2025-04-04 오후 5.55.33.png" alt="유저의 혈압 로그 API 조회결과 화면" width="550" />
+
+<img src="images/스크린샷 2025-04-04 오후 6.16.39.png" alt="유저의 혈압 로그 저장 DB 반영결과" width="550" />
+<img src="images/스크린샷 2025-04-04 오후 6.15.46.png" alt="유저의 혈압 로그 저장 API 포스트맨 테스트" width="550" />
