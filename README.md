@@ -171,6 +171,7 @@
 - 각 모듈은 `./gradlew :{module}:clean :{module}:bootJar` 명령으로 개별 빌드됩니다.
 
 ### Docker 이미지 생성
+- Docker Desktop이 설치되어 있다고 가정합니다.
 - 각 서비스의 Dockerfile은 프로젝트 루트 전체를 빌드 컨텍스트로 사용하여 필요한 공통 모듈들을 포함합니다.
 - 예시:
     - **api-gateway/Dockerfile:**  
@@ -233,6 +234,5 @@ docker-compose up --build
       }
       ```
 
-![유저의 혈당 로그 API 조회결과 화면](images/스크린샷 2025-04-04 오후 5.54.34.png)
-
-![유저의 주간, 월간 혈당 통계 API 결과 화면](images/스크린샷 2025-04-04 오후 5.55.33.png)
+<img src="images/스크린샷 2025-04-04 오후 5.54.34.png" alt="유저의 혈당 로그 API 조회결과 화면" width="239" />
+<img src="images/스크린샷 2025-04-04 오후 5.55.33.png" alt="유저의 혈당 로그 API 조회결과 화면" width="239" />
