@@ -1,3 +1,10 @@
+plugins {
+	id 'org.springframework.boot' version '3.2.2'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'java'
+}
+
+
 dependencies {
 
 	// Spring Cloud Gateway
@@ -24,6 +31,9 @@ dependencies {
 
 	// 테스트 의존성
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webflux-ui
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.6.0'
 }
 
 dependencyManagement {
@@ -32,4 +42,6 @@ dependencyManagement {
 	}
 }
 
-tasks.register("prepareKotlinBuildScriptModel"){}
+if (!tasks.findByName("prepareKotlinBuildScriptModel")) {
+	tasks.register("prepareKotlinBuildScriptModel") {}
+}

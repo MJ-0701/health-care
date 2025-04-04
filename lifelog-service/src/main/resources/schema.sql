@@ -12,3 +12,10 @@ create table lifelog (
     updated_at TIMESTAMP not null default now()
 
 );
+
+
+CREATE INDEX idx_lifelog_log_type ON lifelog(log_type);
+CREATE INDEX idx_lifelog_ci ON lifelog(ci);
+CREATE INDEX idx_lifelog_user_id ON lifelog(user_id);
+
+CREATE INDEX idx_lifelog_ci_log ON lifelog(ci, log_type);

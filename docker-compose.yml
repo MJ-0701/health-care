@@ -1,0 +1,94 @@
+version: "3.8"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - code-interview
+
+  eureka-server:
+    build:
+      context: .
+      dockerfile: eureka-server/Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      - rabbitmq
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    networks:
+      - code-interview
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/eureka/apps"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - rabbitmq
+      - eureka-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - EUREKA_HOST=eureka-server
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    networks:
+      - code-interview
+    # wait-for-it.sh 파일은 프로젝트 루트에 위치
+    command: >
+      sh -c "/wait-for-it.sh eureka-server:8761 -t 120 && java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} -jar app.jar"
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh
+
+  user-service:
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    container_name: user-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - rabbitmq
+      - api-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - EUREKA_HOST=eureka-server
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    networks:
+      - code-interview
+
+  lifelog-service:
+    build:
+      context: .
+      dockerfile: lifelog-service/Dockerfile
+    container_name: lifelog-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - rabbitmq
+      - api-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - EUREKA_HOST=eureka-server
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    networks:
+      - code-interview
+
+networks:
+  code-interview:
+    driver: bridge

@@ -53,7 +53,6 @@ public class LifelogMessageConsumer {
     @RabbitListener(queues = RabbitMQConfig.QUEUE_BP_TIMELINE_QUERY)
     public BloodPressureTimelineResponseDto consumeBloodPressureTimelineQuery(@Payload TimelineQueryDto queryDto) {
         log.info("🔔 혈압 타임라인 조회 메시지 수신됨: {}", queryDto);
-        BloodPressureTimelineResponseDto timeline = bloodPressureService.getUserBloodPressureTimeline(queryDto.getCi(), queryDto.getPeriodType());
-        return timeline;
+        return bloodPressureService.getUserBloodPressureTimeline(queryDto.getCi(), queryDto.getPeriodType());
     }
 }

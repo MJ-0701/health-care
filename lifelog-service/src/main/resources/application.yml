@@ -1,5 +1,6 @@
 server:
   port: 8082
+  forward-headers-strategy: FRAMEWORK
 
 spring:
   application:
@@ -7,25 +8,25 @@ spring:
   jackson:
     time-zone: Asia/Seoul
   datasource:
-    url: jdbc:h2:mem:testdb;MODE=PostgreSQL       # H2 ??????? MySql ?? ??? ??
-    driver-class-name: org.h2.Driver         # H2 JDBC ????
-    username: lifelog                        # ?? ????
-    password: lifelog                        # ?? ???? (??)
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: lifelog
+    password: lifelog
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect  # Hibernate H2 Dialect ??
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: update                       # ??? ?? ?? (??: none, validate, update, create, create-drop) ??? ?? -> update
+      ddl-auto: update
       jdbc:
         time_zone: Asia/Seoul
   h2:
     console:
-      enabled: true                          # H2 ?? ???
+      enabled: true
       settings:
         web-allow-others: true
-      path: /h2-console                      # H2 ?? ??
+      path: /h2-console
 
-  rabbitmq: # Docker Desktop ??
-    host: localhost # raiibtMQ Host
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
     port: 5672
     username: guest
     password: guest
@@ -34,13 +35,28 @@ spring:
         concurrency: 2
         max-concurrency: 5
 
+springdoc:
+  version: v1
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+  api-docs:
+    path: /api-docs/json
+    groups:
+      enabled: true
+  cache:
+    disabled: true
+
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/ # Eureka URL
+      defaultZone: http://${EUREKA_HOST:localhost}:8761/eureka/
     fetch-registry: true
     register-with-eureka: true
-
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${server.port}

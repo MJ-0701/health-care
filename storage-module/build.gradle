@@ -1,2 +1,3 @@
-
-tasks.register("prepareKotlinBuildScriptModel"){}
+//if (!tasks.findByName("prepareKotlinBuildScriptModel")) {
+//    tasks.register("prepareKotlinBuildScriptModel") {}
+//}

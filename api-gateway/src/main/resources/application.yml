@@ -17,21 +17,38 @@ spring:
           predicates:
             - Path=/v1/users/**
           filters:
-            - RewritePath=/v1/users/(?<segment>.*), /$\{segment}
-
+            - RewritePath=/v1/users/(?<segment>.*), /${segment}
         - id: lifelog-service-route
           uri: lb://lifelog-service
           predicates:
             - Path=/v1/lifelog/**
           filters:
-            - RewritePath=/v1/lifelog/(?<segment>.*), /$\{segment}
-
-
+            - RewritePath=/v1/lifelog/(?<segment>.*), /${segment}
   main:
     web-application-type: reactive
+
+springdoc:
+  enable-native-support: true
+  version: v1
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+    urls:
+      - name: user-service
+        url: http://${HOST:localhost}:8080/v1/users/api-docs/json
+      - name: lifelog-service
+        url: http://${HOST:localhost}:8080/v1/lifelog/api-docs/json
+  api-docs:
+    enabled: true
+    path: /api-docs/json
+  cache:
+    disabled: true
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/ # Eureka ?? URL
-
+      defaultZone: http://${EUREKA_HOST:localhost}:8761/eureka/
