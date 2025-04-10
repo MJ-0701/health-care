@@ -7,10 +7,10 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.30/f195ee86e6c896ea47a1d39defbe20eb59cd149d/lombok-1.18.30.jar" />
         </processorPath>
-        <module name="code-interview-platform.eureka-server.main" />
-        <module name="code-interview-platform.api-gateway.main" />
-        <module name="code-interview-platform.common.main" />
-        <module name="code-interview-platform.worker-server.main" />
+        <module name="health-care.api-gateway.main" />
+        <module name="health-care.common.main" />
+        <module name="health-care.worker-server.main" />
+        <module name="health-care.eureka-server.main" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -30,9 +30,9 @@
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.classgraph/classgraph/4.8.108/1c175d4ce7a1fa67463bad731f37f1a284dab790/classgraph-4.8.108.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.jdt/ecj/3.26.0/4837be609a3368a0f7e7cf0dc1bdbc7fe94993de/ecj-3.26.0.jar" />
         </processorPath>
-        <module name="code-interview-platform.lifelog-service.main" />
-        <module name="code-interview-platform.user-service.main" />
-        <module name="code-interview-platform.storage-module.main" />
+        <module name="health-care.lifelog-service.main" />
+        <module name="health-care.storage-module.main" />
+        <module name="health-care.user-service.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17">
